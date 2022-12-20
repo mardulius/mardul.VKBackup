@@ -11,17 +11,19 @@ namespace Mardul.VKBackup.Services
 {
     public class VKService
     {
-        public VkApi VkApi;
-
-        public VKService()
+        private readonly VkApi VkApi;
+        private readonly ulong applicationId; 
+        public VKService(IConfiguration configuration)
         {
             VkApi = new VkApi();
+            IConfigurationSection vkSettings = configuration.GetSection("VkSettings");
+            this.applicationId = Convert.ToUInt64(vkSettings.GetSection("ApplivationId").Value);
         }
         public async Task Login(string username, string password)
         {
             await VkApi.AuthorizeAsync(new ApiAuthParams
             {
-                ApplicationId = 51481587,
+                ApplicationId = this.applicationId,
                 Login = username,
                 Password = password,
                 Settings = Settings.All,
