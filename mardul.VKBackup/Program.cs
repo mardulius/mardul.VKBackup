@@ -10,7 +10,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<VKService>();
-builder.Services.AddTransient<WebClient>();
 builder.Services.AddTransient<IPhotoSaveService, PhotoSaveService>();
 var app = builder.Build();
 

@@ -27,7 +27,7 @@ namespace Mardul.VKBackup.Services
                 Settings = Settings.All,
             });
         }
-        public async Task LoginTwoFactor(string username, string password, string twoFactorCode)
+        public async Task<string> LoginTwoFactor(string username, string password, string twoFactorCode)
         {
             await VkApi.AuthorizeAsync(new ApiAuthParams
             {
@@ -37,7 +37,7 @@ namespace Mardul.VKBackup.Services
                 Settings = Settings.All,
                 TwoFactorAuthorization = () => twoFactorCode
             });
-            Console.WriteLine(VkApi.Token);
+            return VkApi.Token;
         }
 
         public async Task Logout()
@@ -66,7 +66,7 @@ namespace Mardul.VKBackup.Services
             return albums;
         }
 
-        public async Task<PhotoDto[]> GetPhotos(long albumId)
+        public async Task<PhotoDto[]> GetPhotos(long albumId, string albumName)
         {
             VkCollection<Photo> vkPhotos = await VkApi.Photo.GetAsync(new PhotoGetParams
             {
@@ -77,6 +77,7 @@ namespace Mardul.VKBackup.Services
                           {
                               Id = photo.Id,
                               AlbumId = photo.AlbumId,
+                              AlbumName = albumName,
                               UserId = photo.UserId ?? 0,
                               OwnerId = photo.OwnerId ?? 0,
                               CreateDate = photo.CreateTime,
@@ -84,6 +85,15 @@ namespace Mardul.VKBackup.Services
                               Url = photo.Sizes.LastOrDefault().Url
                           }).ToArray();
             return photos;
+        }
+
+        public async Task LoginToken(string token)
+        {
+           await VkApi.AuthorizeAsync(new ApiAuthParams
+            {
+                AccessToken = token
+            });
+
         }
     }
 }

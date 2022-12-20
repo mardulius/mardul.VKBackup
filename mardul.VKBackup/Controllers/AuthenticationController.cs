@@ -22,9 +22,17 @@ namespace Mardul.VKBackup.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(string userName, string password, string twoFactorCode)
         {
-            await vkService.LoginTwoFactor(userName, password, twoFactorCode);
+          var result =  await vkService.LoginTwoFactor(userName, password, twoFactorCode);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Route("login_token")]
+        public async Task<IActionResult> LoginToken(string token)
+        {
+            await vkService.LoginToken(token);
             return Ok();
         }
+
         [HttpGet]
         [Route("logout")]
         public async Task<IActionResult> LogOut()
